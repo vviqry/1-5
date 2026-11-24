@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuis Interaktif — English Speaking Class Book 1 (Ch 1–5)</title>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
+
+  <!-- ==================== HEADER & MINI DASHBOARD ==================== -->
+  <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <!-- Brand & Title -->
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-base sm:text-lg font-bold text-white leading-tight">English Speaking Class — Book 1</h1>
+              <p class="text-xs text-slate-400">Chapter 1–5 • 50 Soal • Auto-Koreksi Diagnostik</p>
+            </div>
+          </div>
+
+          <!-- Mobile Drawer Toggle -->
+          <button id="mobileNavBtn" type="button" class="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span>Nomor Soal</span>
+          </button>
+        </div>
+
+        <!-- Mini Stats & Reset -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-slate-400">Selesai:</span>
+            <span id="statSolved" class="font-bold text-emerald-400">0 / 50</span>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+            <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+            <span class="text-slate-400">Salah:</span>
+            <span id="statMistakes" class="font-bold text-rose-400">0</span>
+          </div>
+          <button id="openResetModalBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 hover:border-rose-500/40 text-xs font-medium text-slate-300 hover:text-rose-300 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mt-3 flex items-center gap-3">
+        <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800/80">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 via-violet-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <span id="progressPercent" class="text-xs font-semibold text-slate-400 w-10 text-right shrink-0">0%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== FILTER BAR ==================== -->
+  <section class="border-b border-slate-800/60 bg-slate-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <!-- Chapter Filter -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <span class="text-xs font-medium text-slate-400 mr-1 shrink-0">Chapter:</span>
+        <button data-chapter="all" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Semua</button>
+        <button data-chapter="1" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Ch 1</button>
+        <button data-chapter="2" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Ch 2</button>
+        <button data-chapter="3" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Ch 3</button>
+        <button data-chapter="4" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Ch 4</button>
+        <button data-chapter="5" class="chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0">Ch 5</button>
+      </div>
+
+      <!-- Question Type Filter -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-xs font-medium text-slate-400 mr-1">Tipe:</span>
+        <button data-type="all" class="type-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">Semua</button>
+        <button data-type="single" class="type-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">Pilihan Ganda</button>
+        <button data-type="complex" class="type-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition">PG Kompleks</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- LEFT / CENTER: QUESTION CARD -->
+    <div class="lg:col-span-8 space-y-5">
+      <!-- Completion Banner (Shown when all 50 questions are solved) -->
+      <div id="completionBanner" class="hidden rounded-2xl bg-gradient-to-r from-emerald-950/90 to-indigo-950/90 border border-emerald-500/40 p-5 shadow-xl">
+        <div class="flex items-start gap-4">
+          <div class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 text-emerald-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-emerald-300">Luar Biasa! Semua 50 Soal Telah Diselesaikan!</h2>
+            <p class="text-sm text-slate-300 mt-1">Kamu telah menaklukkan seluruh materi Chapter 1 sampai Chapter 5 dari <em>English Speaking Class Book 1</em>. Kamu tetap bisa meninjau soal-soal di bawah atau menekan Reset untuk latihan ulang.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Question Card -->
+      <article id="questionCard" class="rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl shadow-black/40 overflow-hidden">
+        <!-- Card Top Meta -->
+        <div class="px-5 sm:px-6 py-4 border-b border-slate-800/80 bg-slate-900/80 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="qNumberBadge" class="px-2.5 py-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-bold">
+              Soal #1
+            </span>
+            <span id="qChapterBadge" class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium">
+              Chapter 1: First Meetings
+            </span>
+          </div>
+          <span id="qTypeBadge" class="px-2.5 py-1 rounded-lg text-xs font-semibold">
+            Pilihan Ganda
+          </span>
+        </div>
+
+        <!-- Question Body -->
+        <div class="p-5 sm:p-6">
+          <h2 id="qText" class="text-base sm:text-lg font-semibold text-white leading-relaxed">
+            Memuat soal...
+          </h2>
+
+          <p id="qInstruction" class="mt-2 text-xs text-slate-400">
+            Pilih satu jawaban yang paling tepat. Auto-koreksi langsung berjalan saat kamu memilih opsi.
+          </p>
+
+          <!-- Options List -->
+          <div id="optionsContainer" class="mt-5 space-y-3">
+            <!-- Dynamically rendered A, B, C, D buttons -->
+          </div>
+
+          <!-- Action Button for Complex Questions -->
+          <div id="complexActionWrap" class="hidden mt-5 flex flex-wrap items-center justify-between gap-3">
+            <span id="complexSelectedHint" class="text-xs text-slate-400">Centang lebih dari 1 opsi yang menurutmu benar.</span>
+            <button id="checkComplexBtn" type="button" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white text-sm font-semibold shadow-lg shadow-indigo-600/25 transition disabled:opacity-50 disabled:cursor-not-allowed">
+              Periksa Jawaban
+            </button>
+          </div>
+
+          <!-- Diagnostic Feedback Box -->
+          <div id="feedbackBox" class="hidden mt-6 rounded-2xl p-4 sm:p-5 border transition-all">
+            <!-- Dynamically populated diagnostic feedback -->
+          </div>
+        </div>
+
+        <!-- Bottom Navigation Controls -->
+        <div class="px-5 sm:px-6 py-4 border-t border-slate-800/80 bg-slate-950/40 flex items-center justify-between gap-3">
+          <button id="prevBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Sebelumnya</span>
+          </button>
+
+          <span id="filterPositionText" class="text-xs font-medium text-slate-400">
+            1 dari 50
+          </span>
+
+          <button id="nextBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
+            <span>Selanjutnya</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <!-- RIGHT SIDEBAR: QUESTION NAVIGATOR (DESKTOP) -->
+    <aside class="hidden lg:block lg:col-span-4 sticky top-28">
+      <div class="rounded-2xl bg-slate-900 border border-slate-800 p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-white">Navigasi Soal (1–50)</h3>
+          <span id="navCountBadge" class="text-xs text-slate-400">50 ditampilkan</span>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 mb-4 pb-3 border-b border-slate-800">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span>Benar</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-500"></span>Perlu Perbaikan</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-700"></span>Belum</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded ring-2 ring-indigo-400 bg-indigo-600"></span>Aktif</span>
+        </div>
+
+        <!-- 1-50 Grid -->
+        <div id="desktopNavGrid" class="grid grid-cols-5 gap-2 max-h-[55vh] overflow-y-auto pr-1">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ==================== MOBILE NAV DRAWER ==================== -->
+  <div id="mobileDrawerOverlay" class="fixed inset-0 z-50 hidden lg:hidden">
+    <div id="mobileDrawerBackdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-80 max-w-[88vw] bg-slate-900 border-l border-slate-800 p-5 flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white">Navigasi Soal</h3>
+        <button id="closeMobileDrawerBtn" type="button" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 my-3">
+        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span>Benar</span>
+        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-amber-500"></span>Perbaikan</span>
+        <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-slate-700"></span>Belum</span>
+      </div>
+      <div id="mobileNavGrid" class="grid grid-cols-5 gap-2 overflow-y-auto flex-1 pr-1 content-start">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CUSTOM RESET CONFIRMATION MODAL ==================== -->
+  <div id="resetModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div id="resetModalBackdrop" class="absolute inset-0 bg-black/75 backdrop-blur-sm"></div>
+    <div class="relative w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-2xl">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-white">Reset Semua Progres Kuis?</h3>
+      </div>
+      <p class="text-sm text-slate-400 leading-relaxed">
+        Semua jawaban benar, catatan kesalahan, dan progres yang tersimpan akan dihapus. Kamu akan mengulang dari Soal #1.
+      </p>
+      <div class="mt-6 flex items-center justify-end gap-2.5">
+        <button id="cancelResetBtn" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-200 transition">
+          Batal
+        </button>
+        <button id="confirmResetBtn" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white transition">
+          Ya, Reset Kuis
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-slate-800/60 py-4 text-center text-xs text-slate-500">
+    Berdasarkan materi <strong>English Speaking Class Book 1</strong> (Lilla Rama Dona, M.Pd.) — Chapter 1 s.d. Chapter 5.
+  </footer>
+
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    /**
+     * =========================================================================
+     * BANK SOAL LENGKAP: 50 SOAL (CHAPTER 1 - CHAPTER 5)
+     * - Setiap chapter memiliki 10 soal: 6 Pilihan Ganda ('single') & 4 PG Kompleks ('complex').
+     * - Setiap opsi salah memiliki `optionFeedback` spesifik (menjelaskan letak kesalahannya).
+     * - Setiap soal memiliki `guidance` (petunjuk konsep/aturan TANPA membocorkan jawaban benar).
+     * =========================================================================
+     */
+    const QUESTIONS = [
+      // ==================== CHAPTER 1: FIRST MEETINGS & PROFESSIONAL INTRODUCTIONS (1 - 10) ====================
+      {
+        id: 1,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Kamu bertemu supervisor-mu di hotel pada pukul 08.00 pagi untuk pertama kalinya hari itu. Sapaan mana yang paling tepat dan profesional?",
+        options: {
+          A: "It was nice talking to you.",
+          B: "Good morning! How are you?",
+          C: "Hi! How's it going, bro?",
+          D: "See you later!"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Ungkapan ini digunakan untuk menutup/mengakhiri percakapan, bukan untuk menyapa saat baru bertemu.",
+          C: "Terlalu santai/slang ('bro') untuk situasi profesional saat menyapa supervisor.",
+          D: "Ungkapan ini adalah salam perpisahan saat hendak pergi, bukan sapaan awal di pagi hari."
+        },
+        guidance: "Perhatikan situasi (profesional dengan supervisor) dan waktunya (pagi hari). Pilih sapaan pembuka yang sopan dan sesuai waktu.",
+        successNote: "Tepat! 'Good morning! How are you?' adalah sapaan pembuka yang sopan dan profesional di pagi hari."
+      },
+      {
+        id: 2,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Dalam perkenalan diri, jika seseorang bertanya 'What can I call you?', informasi apa yang sedang ia tanyakan?",
+        options: {
+          A: "Nomor telepon atau alamat rumahmu",
+          B: "Kota asal tempat kamu dibesarkan",
+          C: "Nama panggilan (nickname) yang kamu inginkan",
+          D: "Pekerjaan atau jurusan sekolahmu saat ini"
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Kata 'call' di sini bukan berarti menelepon, melainkan 'memanggil' seseorang dengan sebutan tertentu.",
+          B: "Untuk menanyakan kota asal (hometown), pertanyaannya adalah 'Where are you from?'.",
+          D: "Untuk menanyakan pekerjaan/jurusan (occupation), pertanyaannya adalah 'What do you do?' atau 'What do you study?'."
+        },
+        guidance: "Pahami fungsi ekspresi 'What can I call you?' yang biasanya dijawab dengan 'You can call me ...'.",
+        successNote: "Benar! 'What can I call you?' digunakan untuk menanyakan nama panggilan (preferred name / nickname)."
+      },
+      {
+        id: 3,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Lengkapi kalimat perkenalan berikut dengan 'to be' dan subject pronoun yang tepat: 'My full name is Rina Putri. ___ a culinary student, and my classmates ___ very friendly.'",
+        options: {
+          A: "I am / is",
+          B: "I is / are",
+          C: "I am / are",
+          D: "My / are"
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Bagian pertama benar, tetapi 'my classmates' berbentuk jamak (plural), sehingga tidak boleh memakai 'is'.",
+          B: "Subjek 'I' tidak pernah berpasangan dengan 'is' dalam bahasa Inggris.",
+          D: "'My' adalah possessive adjective, bukan subject pronoun + to be yang bisa langsung diikuti 'a culinary student'."
+        },
+        guidance: "Ingat aturan dasar 'to be': subjek 'I' berpasangan dengan 'am', subjek tunggal (he/she/it) dengan 'is', dan subjek jamak (you/we/they/classmates) dengan 'are'.",
+        successNote: "Mantap! 'I am' untuk subjek tunggal pertama dan 'are' untuk subjek jamak 'my classmates'."
+      },
+      {
+        id: 4,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Saat baru pertama kali bekerja di dapur hotel internasional, kamu ingin bertanya bagian/divisi tempat rekan kerjamu bertugas. Ekspresi workplace mana yang paling tepat?",
+        options: {
+          A: "Where are you from?",
+          B: "Which section do you work in?",
+          C: "What is your hometown?",
+          D: "Why are you learning English?"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Pertanyaan ini menanyakan asal daerah/negara, bukan divisi kerja di dapur.",
+          C: "Kata 'hometown' berarti kota asal, tidak berkaitan dengan bagian tempat kerja.",
+          D: "Pertanyaan ini menanyakan alasan belajar bahasa Inggris, bukan divisi kerja."
+        },
+        guidance: "Cari pertanyaan yang mengandung kata kunci terkait bagian/departemen tempat seseorang bekerja di lingkungan kerja.",
+        successNote: "Betul! 'Which section do you work in?' digunakan untuk menanyakan bagian atau departemen kerja rekanmu."
+      },
+      {
+        id: 5,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Rekan kerjamu berkata: 'I enjoy baking pastries.' Sebagai pembicara yang baik (good speaker), pertanyaan lanjutan (follow-up question) mana yang paling natural untuk melanjutkan percakapan?",
+        options: {
+          A: "Good morning! Nice to meet you.",
+          B: "Really? Where did you learn it?",
+          C: "My full name is Ahmad Rizky.",
+          D: "It was nice talking to you. Bye."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Sapaan awal tidak cocok dipakai di tengah percakapan yang sudah membahas hobi.",
+          C: "Langsung menyebut nama lengkap tanpa merespons ucapan lawan bicara membuat percakapan terasa kaku dan terputus.",
+          D: "Ungkapan ini langsung menutup percakapan, bukan melanjutkannya dengan follow-up question."
+        },
+        guidance: "Follow-up question yang baik merespons informasi lawan bicara (misalnya dengan ketertarikan) lalu mengajukan pertanyaan terkait topik yang baru saja ia sebutkan.",
+        successNote: "Tepat sekali! Merespons dengan 'Really?' lalu menanyakan detail seperti 'Where did you learn it?' membuat percakapan terus mengalir."
+      },
+      {
+        id: 6,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "single",
+        question: "Di hari pertama kerja di luar negeri, kamu ingin menunjukkan sikap positif bahwa kamu masih dalam tahap belajar namun bersemangat untuk terus berkembang. Kalimat mana yang paling tepat?",
+        options: {
+          A: "I don't know anything, please do my job.",
+          B: "I'm still learning, but I'm willing to learn.",
+          C: "I usually work the morning shift.",
+          D: "My hometown is Padang, West Sumatra."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Kalimat ini terkesan pasif dan tidak profesional di dunia kerja.",
+          C: "Kalimat ini menjelaskan jadwal shift kerja, bukan sikap positif terhadap proses belajar.",
+          D: "Kalimat ini hanya menyebutkan kota asal, tidak menunjukkan sikap belajar."
+        },
+        guidance: "Carilah ungkapan workplace dari Chapter 1 yang menunjukkan kerendahan hati ('masih belajar') sekaligus kemauan/antusiasme ('willing to ...').",
+        successNote: "Benar! 'I'm still learning, but I'm willing to learn.' adalah ungkapan profesional untuk menunjukkan sikap positif di tempat kerja."
+      },
+      {
+        id: 7,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "complex",
+        question: "Manakah di antara jawaban berikut yang termasuk 'Extended Answer' (jawaban yang diperluas lebih dari satu kalimat/detail, bukan sekadar satu kata) saat ditanya 'What do you do?' atau 'Where are you from?'",
+        options: {
+          A: "I'm a culinary student. I'm interested in pastry.",
+          B: "Padang.",
+          C: "I'm from Padang, West Sumatra. I grew up there.",
+          D: "Student."
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "Ini adalah jawaban satu kata (one-word answer), belum diperluas dengan kalimat lengkap maupun informasi tambahan.",
+          D: "Ini juga jawaban satu kata saja, belum membentuk kalimat utuh apalagi extended answer."
+        },
+        guidance: "Di Chapter 1, 'Extended Answer' berarti menjawab dengan kalimat lengkap lalu menambahkan satu detail atau kalimat ekstra (bukan jawaban satu kata).",
+        successNote: "Sempurna! Kedua kalimat tersebut memberikan informasi utama sekaligus detail tambahan yang membuat perkenalan lebih natural."
+      },
+      {
+        id: 8,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "complex",
+        question: "Pilih kosakata (Word Bank Chapter 1) beserta arti bahasa Indonesianya yang BENAR:",
+        options: {
+          A: "hometown = kota asal",
+          B: "occupation = pengalaman kerja",
+          C: "responsible = bertanggung jawab",
+          D: "work experience = pekerjaan utama"
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "'Occupation' berarti pekerjaan/profesi, bukan pengalaman kerja.",
+          D: "'Work experience' berarti pengalaman kerja, bukan pekerjaan utama."
+        },
+        guidance: "Periksa kembali padanan kata pada Word Bank Chapter 1. Bedakan arti antara 'occupation' (pekerjaan) dan 'work experience' (pengalaman kerja).",
+        successNote: "Tepat! 'Hometown' berarti kota asal dan 'responsible' berarti bertanggung jawab."
+      },
+      {
+        id: 9,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "complex",
+        question: "Manakah di antara ungkapan berikut yang dapat digunakan sebagai 'Follow-up Questions' untuk menjaga percakapan tetap berjalan setelah seseorang bercerita tentang hobinya?",
+        options: {
+          A: "How long have you been doing that?",
+          B: "What about you?",
+          C: "Good afternoon, sir.",
+          D: "Why do you like it?"
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "Ini adalah sapaan pembuka formal (greeting), bukan pertanyaan lanjutan di tengah percakapan."
+        },
+        guidance: "Pilih semua ekspresi yang berbentuk pertanyaan untuk menggali detail lebih lanjut (durasi, alasan) atau mengembalikan pertanyaan ke lawan bicara.",
+        successNote: "Hebat! Ketiga pertanyaan tersebut adalah follow-up questions efektif untuk memperpanjang obrolan."
+      },
+      {
+        id: 10,
+        chapter: 1,
+        chapterTitle: "First Meetings & Professional Introductions",
+        type: "complex",
+        question: "Dalam role-play hari pertama bekerja di luar negeri (Workplace Role-Play), ungkapan mana saja yang tepat digunakan untuk meminta bantuan dengan sopan atau menutup percakapan dengan rekan kerja?",
+        options: {
+          A: "Could you show me how this works?",
+          B: "Thanks for your help. See you later.",
+          C: "It was nice talking to you.",
+          D: "What's your full name?"
+        },
+        correct: ["A", "B", "C"],
+        optionFeedback: {
+          D: "Pertanyaan ini digunakan untuk meminta informasi nama lengkap di awal perkenalan, bukan untuk meminta bantuan atau menutup percakapan."
+        },
+        guidance: "Fokus pada dua fungsi yang diminta soal: (1) meminta bantuan dengan sopan ('Could you ...') dan (2) menutup percakapan secara ramah/profesional.",
+        successNote: "Benar semua! Ketiga ungkapan itu sangat berguna untuk meminta bantuan secara sopan dan menutup percakapan kerja."
+      },
+
+      // ==================== CHAPTER 2: SIMPLE PRESENT — DAILY ROUTINES (11 - 20) ====================
+      {
+        id: 11,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Pilih kata kerja (verb) yang tepat untuk melengkapi kalimat Simple Present berikut: 'She ___ breakfast at 6 a.m. every morning.'",
+        options: {
+          A: "have",
+          B: "has",
+          C: "having",
+          D: "haves"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "'Have' hanya digunakan untuk subjek I, You, We, dan They, bukan untuk 'She'.",
+          C: "'Having' tanpa 'to be' tidak tepat digunakan untuk rutinitas harian dalam Simple Present.",
+          D: "'Haves' bukan bentuk kata kerja yang valid dalam bahasa Inggris; 'have' memiliki bentuk tidak beraturan untuk he/she."
+        },
+        guidance: "Untuk rutinitas harian (Simple Present) dengan subjek tunggal orang ketiga (He/She), kata kerja 'have' mengalami perubahan bentuk khusus.",
+        successNote: "Betul! Untuk subjek He/She dalam Simple Present, 'have' berubah menjadi 'has'."
+      },
+      {
+        id: 12,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Lengkapi kalimat berikut dengan benar: 'My brother ___ English every day and ___ TV at night.'",
+        options: {
+          A: "study / watch",
+          B: "studys / watchs",
+          C: "studies / watches",
+          D: "studies / watch"
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "'My brother' setara dengan 'He', jadi kata kerjanya wajib mendapat akhiran -s/-es/-ies.",
+          B: "Ejaan 'studys' dan 'watchs' salah. Kata berakhiran konsonan+y berubah menjadi -ies, sedangkan akhiran -ch mendapat -es.",
+          D: "Kata kerja pertama sudah benar, namun kata kerja kedua ('watch') juga harus mengikuti subjek 'My brother'."
+        },
+        guidance: "Perhatikan subjeknya ('My brother' = He). Terapkan aturan ejaan Simple Present: konsonan + y -> -ies, dan akhiran -ch -> -es.",
+        successNote: "Tepat! 'My brother' adalah subjek tunggal (He), sehingga menjadi 'studies' dan 'watches'."
+      },
+      {
+        id: 13,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Susun kata-kata acak berikut menjadi kalimat Simple Present yang benar: 'breakfast / she / has / at 6 a.m.'",
+        options: {
+          A: "She at 6 a.m. has breakfast.",
+          B: "Breakfast she has at 6 a.m.",
+          C: "She has breakfast at 6 a.m.",
+          D: "Has she breakfast at 6 a.m."
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Keterangan waktu 'at 6 a.m.' tidak diletakkan di antara subjek dan kata kerja utama.",
+          B: "Objek 'breakfast' tidak diletakkan di depan subjek pada kalimat berita biasa.",
+          D: "Urutan 'Has she ...' bukan pola kalimat berita (Subject + Verb + Object + Time)."
+        },
+        guidance: "Ikuti pola dasar kalimat Simple Present: Subject + Verb + Object + Time Expression.",
+        successNote: "Benar! Susunan yang tepat adalah Subject (She) + Verb (has) + Object (breakfast) + Time (at 6 a.m.)."
+      },
+      {
+        id: 14,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Preposisi waktu (time expression) manakah yang BENAR digunakan dalam kalimat rutinitas berikut: 'I wake up ___ 5 a.m. and I do my homework ___ the evening.'",
+        options: {
+          A: "in / at",
+          B: "at / in",
+          C: "on / in",
+          D: "at / on"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Posisinya terbalik. Jam spesifik tidak memakai 'in', dan bagian hari ('the evening') tidak memakai 'at'.",
+          C: "'On' tidak digunakan untuk jam spesifik seperti '5 a.m.'.",
+          D: "'On' tidak digunakan untuk bagian hari seperti 'the evening'."
+        },
+        guidance: "Ingat pasangan Time Expressions di Chapter 2: jam spesifik (5 a.m., 7 o'clock) memakai preposisi apa, dan bagian hari (the morning, the afternoon, the evening) memakai preposisi apa?",
+        successNote: "Mantap! Jam spesifik memakai 'at' (at 5 a.m.), sedangkan bagian hari memakai 'in' (in the evening)."
+      },
+      {
+        id: 15,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Di tempat kerja (hotel/restoran), kamu ingin menanyakan jam berapa rekan kerjamu biasanya mulai bekerja. Pertanyaan mana yang paling tepat?",
+        options: {
+          A: "What time do you usually start work?",
+          B: "What time does you usually start work?",
+          C: "What time you usually starts work?",
+          D: "Where do you usually start work?"
+        },
+        correct: ["A"],
+        optionFeedback: {
+          B: "Subjek 'you' tidak berpasangan dengan 'does', melainkan dengan 'do'.",
+          C: "Kalimat tanya Simple Present memerlukan kata bantu (auxiliary) 'do/does', dan verb setelahnya tidak memakai -s.",
+          D: "'Where' menanyakan tempat, bukan jam berapa (waktu)."
+        },
+        guidance: "Untuk menanyakan waktu gunakan 'What time', lalu perhatikan kata bantu yang cocok untuk subjek 'you' dalam kalimat tanya Simple Present.",
+        successNote: "Tepat! 'What time do you usually start work?' menggunakan kata tanya waktu dan auxiliary 'do' yang sesuai dengan subjek 'you'."
+      },
+      {
+        id: 16,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "single",
+        question: "Manakah kalimat berikut yang paling tepat untuk mendeskripsikan rutinitas kerja pagi hari seorang asisten dapur berdasarkan Chapter 2?",
+        options: {
+          A: "I go to bed at 7 a.m.",
+          B: "I prepare the kitchen and help the chef.",
+          C: "I do my homework in the kitchen.",
+          D: "I take a shower with the chef."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "'Go to bed' berarti pergi tidur, bukan aktivitas memulai kerja di pagi hari.",
+          C: "'Do my homework' adalah rutinitas pelajar di rumah, bukan tugas kerja dapur.",
+          D: "Kalimat ini tidak masuk akal secara konteks pekerjaan di dapur."
+        },
+        guidance: "Pilih aktivitas yang relevan dengan ungkapan kerja dapur (Workplace Connection) di Chapter 2.",
+        successNote: "Benar! 'I prepare the kitchen and help the chef.' adalah contoh kalimat rutinitas kerja dapur di Chapter 2."
+      },
+      {
+        id: 17,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "complex",
+        question: "Pilih SEMUA kalimat Simple Present yang tata bahasanya (Subject + Verb agreement) BENAR:",
+        options: {
+          A: "They go home at 3 p.m.",
+          B: "She take a shower in the morning.",
+          C: "He goes to school at 7 a.m.",
+          D: "We has dinner at 7 p.m."
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "Subjek 'She' membutuhkan akhiran -s pada kata kerja 'take' (harusnya 'takes').",
+          D: "Subjek 'We' tidak memakai 'has'; bentuk yang tepat untuk 'We' adalah 'have'."
+        },
+        guidance: "Cek kesesuaian subjek dan kata kerja: I/You/We/They memakai Verb dasar (tanpa -s), sedangkan He/She memakai Verb + s/es (atau 'has').",
+        successNote: "Luar biasa! 'They go' dan 'He goes' sudah sesuai aturan Subject-Verb Agreement."
+      },
+      {
+        id: 18,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "complex",
+        question: "Manakah di antara ekspresi waktu (Time Expressions) berikut yang penulisannya BENAR sesuai materi Chapter 2?",
+        options: {
+          A: "in the morning",
+          B: "at night",
+          C: "in 7 o'clock",
+          D: "after school"
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "Jam tepat (7 o'clock) tidak boleh menggunakan preposisi 'in', melainkan 'at'."
+        },
+        guidance: "Ingat bahwa 'in' dipakai untuk morning/afternoon/evening, 'at' dipakai untuk night dan jam spesifik, serta 'after/before' bisa langsung diikuti kata benda seperti 'school'.",
+        successNote: "Tepat sekali! 'in the morning', 'at night', dan 'after school' semuanya benar."
+      },
+      {
+        id: 19,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "complex",
+        question: "Pilih pasangan kosakata Daily Routines dan artinya yang BENAR:",
+        options: {
+          A: "brush my teeth = menyikat gigi",
+          B: "get dressed = sarapan pagi",
+          C: "do my homework = mengerjakan PR",
+          D: "take a shower = berpakaian"
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "'Get dressed' artinya berpakaian, bukan sarapan pagi ('have breakfast').",
+          D: "'Take a shower' artinya mandi, bukan berpakaian ('get dressed')."
+        },
+        guidance: "Cocokkan kembali kosakata rutinitas pagi & sore dari Word Bank Chapter 2 dengan arti bahasa Indonesianya.",
+        successNote: "Benar! 'Brush my teeth' = menyikat gigi dan 'do my homework' = mengerjakan PR."
+      },
+      {
+        id: 20,
+        chapter: 2,
+        chapterTitle: "Simple Present: Talking About Daily Routines",
+        type: "complex",
+        question: "Pilih pertanyaan-pertanyaan yang BENAR secara tata bahasa untuk menanyakan rutinitas harian seseorang:",
+        options: {
+          A: "What do you do after school?",
+          B: "What time does she wakes up?",
+          C: "Do you study in the evening?",
+          D: "What time do you go to bed?"
+        },
+        correct: ["A", "C", "D"],
+        optionFeedback: {
+          B: "Setelah kata bantu 'does', kata kerja utama harus kembali ke bentuk dasar (tanpa tambahan -s)."
+        },
+        guidance: "Dalam kalimat tanya Simple Present (do/does + Subject + Verb), pastikan kata kerja utamanya selalu berbentuk dasar (base verb).",
+        successNote: "Sempurna! Semua pilihan benar tersebut menggunakan pola 'do + subject + base verb' secara akurat."
+      },
+
+      // ==================== CHAPTER 3: MY FAMILY & FRIENDS (21 - 30) ====================
+      {
+        id: 21,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Pilih kalimat negatif yang BENAR untuk menyatakan bahwa saudara perempuanmu tidak memiliki sepeda motor:",
+        options: {
+          A: "She don't have a motorcycle.",
+          B: "She doesn't has a motorcycle.",
+          C: "She doesn't have a motorcycle.",
+          D: "She not have a motorcycle."
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Subjek 'She' tidak boleh menggunakan 'don't'; gunakan 'doesn't'.",
+          B: "Setelah 'doesn't', kata kerja harus kembali ke bentuk dasar ('have'), bukan 'has'.",
+          D: "Kalimat negatif Simple Present dengan kata kerja 'have' wajib memakai kata bantu 'do/does' sebelum 'not'."
+        },
+        guidance: "Ingat aturan penting Chapter 3: Untuk He/She negatif gunakan 'doesn't' diikuti bentuk dasar 'have' (bukan 'has').",
+        successNote: "Tepat! 'She doesn't have a motorcycle.' adalah bentuk negatif yang benar."
+      },
+      {
+        id: 22,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Lengkapi kalimat berikut dengan Possessive Adjective yang tepat: 'Sinta is my best friend. ___ hobby is cooking. And Rian is my classmate. ___ father is a chef.'",
+        options: {
+          A: "She / He",
+          B: "His / Her",
+          C: "Her / His",
+          D: "Their / Our"
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "'She' dan 'He' adalah subject pronoun, tidak bisa langsung diletakkan sebelum kata benda 'hobby' atau 'father'.",
+          B: "Posisinya terbalik! Sinta adalah perempuan (memakai kata ganti milik perempuan), sedangkan Rian adalah laki-laki.",
+          D: "'Their' (mereka) dan 'Our' (kami) adalah bentuk jamak, padahal Sinta dan Rian masing-masing merujuk pada satu orang."
+        },
+        guidance: "Gunakan possessive adjective (kata sifat kepemilikan) yang sesuai jenis kelamin: perempuan (she -> her), laki-laki (he -> his).",
+        successNote: "Benar! 'Her' untuk kepemilikan perempuan (Sinta) dan 'His' untuk kepemilikan laki-laki (Rian)."
+      },
+      {
+        id: 23,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Perhatikan perbedaan pertanyaan di Chapter 3: Jika seseorang bertanya 'What does she look like?', jawaban mana yang paling sesuai?",
+        options: {
+          A: "She is friendly and helpful.",
+          B: "She has long black hair.",
+          C: "She likes cooking Indonesian food.",
+          D: "She works in a hotel kitchen."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Ini mendeskripsikan kepribadian (personality), yang merupakan jawaban untuk pertanyaan 'What is she like?'.",
+          C: "Ini mendeskripsikan hobi/kesukaan, yang merupakan jawaban untuk 'What does she like?'.",
+          D: "Ini mendeskripsikan pekerjaan, yang merupakan jawaban untuk 'What does she do?'."
+        },
+        guidance: "Bedakan tiga pertanyaan penting di Chapter 3: 'What does she look like?' (penampilan fisik), 'What is she like?' (kepribadian), dan 'What does she like?' (kesukaan/hobi).",
+        successNote: "Mantap! 'What does she look like?' menanyakan penampilan fisik (appearance), seperti 'She has long black hair.'"
+      },
+      {
+        id: 24,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Bagaimana cara menyatakan 'rumah milik temanku' dan 'hobi milik Dika' menggunakan Possessive 's yang benar?",
+        options: {
+          A: "my friend house / Dika hobby",
+          B: "my friend's house / Dika's hobby",
+          C: "my friends's house / Dikas' hobby",
+          D: "house's my friend / hobby's Dika"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Tanpa apostrof dan s ('s), kepemilikan pada nama orang/frasa ini tidak terbentuk secara gramatikal.",
+          C: "Penulisan 'friends's' untuk satu teman dan 'Dikas'' untuk nama Dika salah penempatan apostrofnya.",
+          D: "Urutannya terbalik; pemilik harus berada di depan diikuti 's, baru bendanya."
+        },
+        guidance: "Pola Possessive 's adalah: [Pemilik]'s + [Benda/Hal yang dimiliki].",
+        successNote: "Betul! 'My friend's house' dan 'Dika's hobby' menggunakan pola possessive 's dengan benar."
+      },
+      {
+        id: 25,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Dalam kosakata hubungan (Friends & Relationships), orang yang tinggal sekamar denganmu disebut ___, sedangkan rekan satu tempat kerja disebut ___.",
+        options: {
+          A: "neighbor / classmate",
+          B: "roommate / colleague",
+          C: "cousin / teammate",
+          D: "childhood friend / uncle"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "'Neighbor' adalah tetangga, dan 'classmate' adalah teman sekelas.",
+          C: "'Cousin' adalah sepupu, dan 'teammate' adalah teman satu tim.",
+          D: "'Childhood friend' adalah teman masa kecil, dan 'uncle' adalah paman."
+        },
+        guidance: "Ingat kata dasar penyusunnya: 'room' (kamar) + mate, dan kata bahasa Inggris formal untuk rekan kerja di Chapter 3.",
+        successNote: "Tepat! 'Roommate' = teman sekamar, dan 'colleague' = rekan kerja."
+      },
+      {
+        id: 26,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "single",
+        question: "Lengkapi percakapan tanya-jawab tentang keluarga berikut:\nA: 'Does your sister have a job?'\nB: 'Yes, ___.'",
+        options: {
+          A: "she do",
+          B: "she has",
+          C: "she does",
+          D: "she is"
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Subjek 'she' tidak berpasangan dengan 'do'.",
+          B: "Untuk jawaban singkat (short answer) dari pertanyaan yang diawali 'Does', kita mengulang auxiliary-nya, bukan kata kerja 'has'.",
+          D: "Pertanyaan tidak diawali dengan 'Is', melainkan 'Does'."
+        },
+        guidance: "Perhatikan kata pertama pada pertanyaan Yes/No ('Does ...?'). Jawaban singkat harus memakai kata bantu yang sama.",
+        successNote: "Benar! Pertanyaan 'Does she ...?' dijawab singkat dengan 'Yes, she does.' atau 'No, she doesn't.'"
+      },
+      {
+        id: 27,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "complex",
+        question: "Pilih SEMUA kalimat yang menggunakan 'have' atau 'has' dengan BENAR:",
+        options: {
+          A: "My mother has a small business.",
+          B: "They has two children.",
+          C: "We have a small family.",
+          D: "He have one younger sister."
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "Subjek 'They' adalah jamak, sehingga harus menggunakan 'have', bukan 'has'.",
+          D: "Subjek 'He' adalah tunggal orang ketiga, sehingga harus menggunakan 'has', bukan 'have'."
+        },
+        guidance: "Gunakan 'have' untuk I/You/We/They, dan 'has' untuk He/She/nama satu orang (seperti 'My mother').",
+        successNote: "Bagus sekali! 'My mother has' dan 'We have' sudah tepat."
+      },
+      {
+        id: 28,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "complex",
+        question: "Manakah di antara kalimat berikut yang merupakan jawaban yang tepat untuk pertanyaan 'What is he/she like?' (menanyakan kepribadian) dan memberikan alasan dengan 'because'?",
+        options: {
+          A: "She is kind and hardworking.",
+          B: "I like her because she always helps me.",
+          C: "He has short black hair.",
+          D: "My mother is important to me because she always supports me."
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "Kalimat ini menjelaskan penampilan fisik (appearance), bukan kepribadian ataupun alasan menggunakan 'because'."
+        },
+        guidance: "Pilih kalimat yang menggambarkan sifat/kepribadian (be + adjective) atau kalimat yang menjelaskan alasan memakai kata hubung 'because'.",
+        successNote: "Tepat! Opsi-opsi tersebut menggambarkan kepribadian dan memberikan alasan menggunakan 'because'."
+      },
+      {
+        id: 29,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "complex",
+        question: "Pilih pasangan kosakata keluarga (Family Word Bank) dan artinya yang TEPAT:",
+        options: {
+          A: "older brother = kakak laki-laki",
+          B: "cousin = paman",
+          C: "aunt = bibi",
+          D: "parents = kakek dan nenek"
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "'Cousin' berarti sepupu; bahasa Inggris untuk paman adalah 'uncle'.",
+          D: "'Parents' berarti orang tua (ayah dan ibu); kakek dan nenek adalah 'grandparents'."
+        },
+        guidance: "Bedakan istilah keluarga inti dan keluarga besar: parents vs grandparents, serta cousin vs uncle/aunt.",
+        successNote: "Benar! 'Older brother' = kakak laki-laki dan 'aunt' = bibi."
+      },
+      {
+        id: 30,
+        chapter: 3,
+        chapterTitle: "My Family & Friends",
+        type: "complex",
+        question: "Pilih SEMUA kalimat yang menggunakan Possessive Adjective (my, your, his, her, our, their) dengan benar:",
+        options: {
+          A: "We are classmates. Our class is X Culinary 1.",
+          B: "They live in Padang. Their house is big.",
+          C: "She is my sister. His name is Lina.",
+          D: "I have a brother. My brother is 20 years old."
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "'Sister' adalah perempuan, jadi kata ganti kepemilikannya harus 'Her', bukan 'His'."
+        },
+        guidance: "Pastikan possessive adjective cocok dengan subjek sebelumnya: We -> Our, They -> Their, I -> My, She -> Her.",
+        successNote: "Sempurna! Semua pilihan yang kamu centang memiliki kecocokan subjek dan possessive adjective yang akurat."
+      },
+
+      // ==================== CHAPTER 4: MY PERSONALITY — LIKES, DISLIKES, STRENGTHS (31 - 40) ====================
+      {
+        id: 31,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Pilih kalimat yang BENAR menggunakan pola 'Be + Adjective' untuk mendeskripsikan kepribadian:",
+        options: {
+          A: "I am friend.",
+          B: "She is carefully.",
+          C: "He is responsible and patient.",
+          D: "They are confidence."
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "'Friend' adalah kata benda (noun: teman). Untuk sifat ramah, gunakan kata sifat (adjective) 'friendly'.",
+          B: "'Carefully' adalah kata keterangan cara (adverb). Setelah 'is' untuk sifat orang, gunakan adjective 'careful'.",
+          D: "'Confidence' adalah kata benda (rasa percaya diri). Kata sifatnya adalah 'confident'."
+        },
+        guidance: "Pola mendeskripsikan kepribadian adalah Subject + be (am/is/are) + Adjective (kata sifat), bukan Noun maupun Adverb (-ly).",
+        successNote: "Tepat! 'Responsible' dan 'patient' adalah kata sifat (adjectives) yang benar digunakan setelah 'is'."
+      },
+      {
+        id: 32,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Lengkapi kalimat berikut dengan bentuk kata kerja yang benar: 'I enjoy ___ with my friends, and I prefer ___ in a team.'",
+        options: {
+          A: "to work / work",
+          B: "working / working",
+          C: "work / working",
+          D: "working / work"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Kata kerja 'enjoy' tidak boleh diikuti 'to + verb', dan 'prefer' di pola Chapter 4 diikuti verb-ing (bukan verb dasar langsung).",
+          C: "Setelah 'enjoy', kata kerja tidak boleh dalam bentuk dasar ('work') tanpa -ing.",
+          D: "Bagian pertama benar, tetapi setelah 'prefer' dalam pola ini tidak boleh langsung memakai verb dasar 'work'."
+        },
+        guidance: "Ingat aturan Chapter 4: 'enjoy + verb-ing' (jangan pakai 'to + verb' setelah enjoy!) dan 'prefer + verb-ing' (atau prefer + noun).",
+        successNote: "Benar sekali! 'Enjoy working' dan 'prefer working' mengikuti pola verb-ing dengan tepat."
+      },
+      {
+        id: 33,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Berdasarkan Word Bank Chapter 4, kata sifat apa yang berarti 'dapat diandalkan' dan 'mudah menyesuaikan diri'?",
+        options: {
+          A: "curious / outgoing",
+          B: "reliable / flexible",
+          C: "organized / careful",
+          D: "creative / confident"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "'Curious' berarti ingin tahu, dan 'outgoing' berarti mudah bergaul.",
+          C: "'Organized' berarti teratur, dan 'careful' berarti teliti/berhati-hati.",
+          D: "'Creative' berarti kreatif, dan 'confident' berarti percaya diri."
+        },
+        guidance: "Periksa kembali arti kosakata kepribadian di Chapter 4 untuk makna 'dapat diandalkan' dan 'fleksibel/mudah beradaptasi'.",
+        successNote: "Mantap! 'Reliable' berarti dapat diandalkan dan 'flexible' berarti mudah menyesuaikan diri."
+      },
+      {
+        id: 34,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Perhatikan Speaking Formula Chapter 4: ANSWER -> REASON -> EXAMPLE. Manakah kalimat berikut yang menerapkan rumus tersebut secara LENGKAP?",
+        options: {
+          A: "I enjoy baking.",
+          B: "I enjoy baking because it is creative.",
+          C: "I enjoy baking because it is creative. For example, I like decorating cakes.",
+          D: "Baking is a cake."
+        },
+        correct: ["C"],
+        optionFeedback: {
+          A: "Kalimat ini baru mencakup bagian ANSWER saja (jawaban dasar), belum ada alasan dan contoh.",
+          B: "Kalimat ini sudah ada ANSWER dan REASON ('because...'), tetapi belum disertai EXAMPLE.",
+          D: "Kalimat ini tidak logis dan tidak mengikuti struktur Answer -> Reason -> Example."
+        },
+        guidance: "Cari opsi yang memuat tiga komponen sekaligus: pernyataan utama (Answer), alasan ('because...'), dan contoh nyata ('for example...').",
+        successNote: "Tepat! Kalimat tersebut memuat Answer ('I enjoy baking'), Reason ('because it is creative'), dan Example ('For example, I like decorating cakes')."
+      },
+      {
+        id: 35,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Dalam wawancara atau percakapan di tempat kerja, kamu ingin menyebutkan kelebihan utamamu dan satu hal yang masih sedang kamu tingkatkan. Pasangan ekspresi workplace mana yang paling tepat?",
+        options: {
+          A: "One of my strengths is being patient. / I'm still improving my English communication skills.",
+          B: "One of my strengths is waiting. / I'm still improving my messy place.",
+          C: "I dislike being patient. / I am friend.",
+          D: "My preference is angry. / I enjoy to cook."
+        },
+        correct: ["A"],
+        optionFeedback: {
+          B: "'Waiting' dan 'messy place' bukan konteks yang tepat untuk kelebihan profesional atau keterampilan yang ditingkatkan.",
+          C: "Tidak tepat menyatakan tidak suka bersabar sebagai nilai positif kerja, dan 'I am friend' salah secara grammar.",
+          D: "'Angry' bukan preferensi kerja yang profesional, dan 'enjoy to cook' salah secara grammar."
+        },
+        guidance: "Gunakan frasa profesional dari Chapter 4: 'One of my strengths is ...' (untuk kelebihan) dan 'I'm still improving my ...' (untuk hal yang sedang ditingkatkan).",
+        successNote: "Bagus! Kedua kalimat tersebut sangat profesional dan sesuai dengan Useful Workplace Expressions di Chapter 4."
+      },
+      {
+        id: 36,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "single",
+        question: "Dalam dialog Chapter 4, Maya berkata: 'I dislike working in a messy place, so I always try to keep my station clean.' Apa makna dari 'messy place'?",
+        options: {
+          A: "Tempat yang luas dan mewah",
+          B: "Tempat yang berantakan / tidak rapi",
+          C: "Tempat yang sangat sepi",
+          D: "Tempat yang penuh pelanggan"
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Lawan kata dari konteks 'keep my station clean' bukanlah luas dan mewah.",
+          C: "'Quiet' berarti sepi, bukan 'messy'.",
+          D: "'Crowded' berarti penuh orang/pelanggan, bukan 'messy'."
+        },
+        guidance: "Perhatikan petunjuk konteks kalimat selanjutnya: '...so I always try to keep my station clean' (menjaga area kerja tetap bersih/rapi).",
+        successNote: "Benar! 'Messy' berarti berantakan/kotor, kebalikan dari 'clean' dan 'organized'."
+      },
+      {
+        id: 37,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "complex",
+        question: "Pilih SEMUA kalimat yang strukturnya BENAR sesuai pola Chapter 4 (Like + Noun atau Like/Love/Enjoy/Prefer + Verb-ing):",
+        options: {
+          A: "I like Indonesian food.",
+          B: "I enjoy to cook with my friends.",
+          C: "I love creating new dishes.",
+          D: "I prefer working in a team."
+        },
+        correct: ["A", "C", "D"],
+        optionFeedback: {
+          B: "Salah! Kata kerja 'enjoy' wajib diikuti Verb-ing ('cooking'), tidak boleh diikuti 'to + verb'."
+        },
+        guidance: "Periksa setiap kalimat: 'like' boleh diikuti Noun atau Verb-ing, sedangkan 'love', 'enjoy', dan 'prefer' dalam pola aktivitas diikuti Verb-ing.",
+        successNote: "Sempurna! Ketiga kalimat tersebut benar baik untuk pola Like + Noun maupun Love/Prefer + Verb-ing."
+      },
+      {
+        id: 38,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "complex",
+        question: "Pilih kalimat-kalimat yang menggunakan 'Be + Adjective' secara BENAR (tanpa kesalahan jenis kata):",
+        options: {
+          A: "I am friendly.",
+          B: "She is careful when she works.",
+          C: "He is friend and carefully.",
+          D: "They are helpful and organized."
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "'Friend' adalah kata benda (harusnya 'friendly') dan 'carefully' adalah kata keterangan (harusnya 'careful')."
+        },
+        guidance: "Pastikan setiap kata setelah am/is/are adalah Adjective (kata sifat), bukan Noun ('friend') atau Adverb ('carefully').",
+        successNote: "Tepat sekali! 'Friendly', 'careful', 'helpful', dan 'organized' semuanya adalah adjective yang tepat setelah to be."
+      },
+      {
+        id: 39,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "complex",
+        question: "Manakah di antara ekspresi berikut yang tepat digunakan untuk mendeskripsikan diri sendiri dan sikap kerja positif di tempat kerja (Workplace Expressions Chapter 4)?",
+        options: {
+          A: "I'd describe myself as friendly and responsible.",
+          B: "I'm good at teamwork.",
+          C: "I'm willing to learn.",
+          D: "I hate my coworkers."
+        },
+        correct: ["A", "B", "C"],
+        optionFeedback: {
+          D: "Pernyataan ini tidak profesional dan menunjukkan sikap negatif di lingkungan kerja."
+        },
+        guidance: "Pilih ekspresi yang menunjukkan kepribadian positif, keahlian ('good at...'), dan kemauan belajar di lingkungan kerja.",
+        successNote: "Hebat! Ketiga ekspresi tersebut sangat efektif untuk membangun kesan profesional saat berbicara dengan rekan kerja atau supervisor."
+      },
+      {
+        id: 40,
+        chapter: 4,
+        chapterTitle: "My Personality: Likes, Dislikes & Strengths",
+        type: "complex",
+        question: "Pilih pasangan kata sifat kepribadian (Word Bank Chapter 4) dan artinya yang BENAR:",
+        options: {
+          A: "hard-working = pekerja keras",
+          B: "patient = teratur",
+          C: "curious = ingin tahu",
+          D: "outgoing = pemalu"
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "'Patient' berarti sabar; bahasa Inggris untuk teratur adalah 'organized'.",
+          D: "'Outgoing' berarti mudah bergaul/ramah, bukan pemalu ('shy')."
+        },
+        guidance: "Cek kembali arti sebenarnya dari 'patient' (sabar vs teratur) dan 'outgoing' (mudah bergaul vs pemalu).",
+        successNote: "Benar! 'Hard-working' = pekerja keras dan 'curious' = ingin tahu."
+      },
+
+      // ==================== CHAPTER 5: MY HOBBIES & FREE TIME (41 - 50) ====================
+      {
+        id: 41,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Perhatikan perubahan subjek pada pola 'Like / Love / Hate + Verb-ing'. Kalimat manakah yang BENAR?",
+        options: {
+          A: "She love baking cookies on weekends.",
+          B: "He hates waiting for a long time.",
+          C: "My friend likes take photos of food.",
+          D: "They loves trying new food."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Subjek 'She' membutuhkan tambahan -s pada kata kerja 'love' (harusnya 'loves').",
+          C: "Setelah 'likes', aktivitas harus memakai Verb-ing ('taking'), bukan bentuk dasar 'take'.",
+          D: "Subjek 'They' adalah jamak, jadi kata kerjanya tidak boleh ditambah -s (harusnya 'love')."
+        },
+        guidance: "Periksa dua hal sekaligus: (1) Subject-Verb agreement (He/She + likes/loves/hates; I/You/We/They + like/love/hate) dan (2) aktivitas setelahnya berbentuk Verb-ing.",
+        successNote: "Tepat! 'He hates waiting...' benar pada penggunaan -s untuk 'He' dan bentuk -ing pada 'waiting'."
+      },
+      {
+        id: 42,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Apa perbedaan makna antara 'I like coffee' (Like + Noun) dan 'I like drinking coffee' (Like + Verb-ing) menurut Chapter 5?",
+        options: {
+          A: "'I like coffee' salah secara tata bahasa, hanya yang kedua yang benar.",
+          B: "'I like coffee' fokus pada bendanya (what?), sedangkan 'I like drinking coffee' fokus pada aktivitasnya (what activity?).",
+          C: "'I like coffee' digunakan untuk masa lalu, sedangkan 'I like drinking coffee' untuk masa depan.",
+          D: "Tidak ada perbedaan struktur sama sekali; keduanya sama-sama menggunakan Verb-ing."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Keduanya benar secara tata bahasa dalam bahasa Inggris.",
+          C: "Keduanya sama-sama menggunakan Simple Present, bukan past atau future.",
+          D: "'Coffee' adalah kata benda (noun), sedangkan 'drinking coffee' menggunakan Verb-ing (aktivitas)."
+        },
+        guidance: "Ingat perbandingan di Chapter 5: 'Like + Noun' menjawab pertanyaan 'What?' (bendanya), sedangkan 'Like + Verb-ing' menjawab 'What activity?' (kegiatannya).",
+        successNote: "Benar! Keduanya benar secara grammar, tetapi 'like + noun' menyoroti bendanya, sedangkan 'like + verb-ing' menyoroti aktivitasnya."
+      },
+      {
+        id: 43,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Jika kamu ingin mengatakan bahwa kamu kurang menyukai suatu hobi dengan cara yang lebih halus/sopan (soft dislike) daripada berkata 'I hate it', ungkapan mana yang paling tepat?",
+        options: {
+          A: "I'm a big fan of it!",
+          B: "I'm not really into playing games.",
+          C: "We have something in common.",
+          D: "I love making new recipes."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "'I'm a big fan of...' justru berarti kamu sangat menyukainya.",
+          C: "Ungkapan ini berarti kamu dan lawan bicaramu memiliki kesamaan hobi/minat.",
+          D: "Kalimat ini menyatakan kesukaan yang kuat ('love'), bukan ketidaksukaan."
+        },
+        guidance: "Cari ekspresi ketidakminatan yang halus (soft dislike) dari Chapter 5, seperti 'I don't really like...', 'I'm not a big fan of...', atau 'I'm not really into...'.",
+        successNote: "Tepat! 'I'm not really into...' adalah cara yang sangat natural dan sopan untuk menyatakan ketidaksukaan."
+      },
+      {
+        id: 44,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Menurut pesan penutup (Teacher Closing Message) di Chapter 5, hobi dapat melatih keterampilan kerja (workplace skills). Hobi 'Photography' (mengambil foto) terutama dapat mengembangkan keterampilan apa?",
+        options: {
+          A: "Creativity and attention to detail",
+          B: "Cooking speed and washing dishes",
+          C: "Sleeping early and waking up late",
+          D: "Driving and repairing machines"
+        },
+        correct: ["A"],
+        optionFeedback: {
+          B: "Ini tidak berkaitan dengan fotografi.",
+          C: "Ini adalah kebiasaan tidur, bukan keterampilan kerja yang dikembangkan dari fotografi.",
+          D: "Ini keterampilan mekanik/mengemudi, bukan manfaat fotografi menurut Chapter 5."
+        },
+        guidance: "Pikirkan kualitas apa yang dibutuhkan seorang fotografer saat memotret komposisi dan detail gambar sesuai daftar manfaat hobi di akhir Chapter 5.",
+        successNote: "Benar! Menurut Chapter 5, fotografi mengembangkan kreativitas (creativity) dan ketelitian pada detail (attention to detail)."
+      },
+      {
+        id: 45,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Saat mengobrol dengan rekan kerja di waktu luang, kamu menyadari kalian berdua sama-sama suka memasak. Ungkapan workplace mana yang paling natural untuk merespons hal itu?",
+        options: {
+          A: "Really? Me too! We have something in common.",
+          B: "I hate cleaning the kitchen.",
+          C: "What is your full name?",
+          D: "I go to bed at 10 p.m."
+        },
+        correct: ["A"],
+        optionFeedback: {
+          B: "Tidak merespons kesamaan hobi yang baru saja ditemukan.",
+          C: "Menanyakan nama lengkap tidak nyambung dengan konteks menemukan kesamaan hobi.",
+          D: "Membicarakan jam tidur tidak relevan dengan merespons kesamaan hobi memasak."
+        },
+        guidance: "Pilih ekspresi yang menunjukkan antusiasme atas kesamaan minat ('me too', 'something in common').",
+        successNote: "Mantap! 'Really? Me too! We have something in common.' sangat natural untuk membangun kedekatan dengan rekan kerja."
+      },
+      {
+        id: 46,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "single",
+        question: "Perhatikan kalimat berikut dari Chapter 5: 'I usually like cooking on weekends.' Versi mana yang diperbaiki menjadi lebih natural untuk menambahkan keterangan frekuensi?",
+        options: {
+          A: "I usually cooking on weekends.",
+          B: "I usually cook on weekends.",
+          C: "I cook usually on weekends.",
+          D: "I like usually cook on weekends."
+        },
+        correct: ["B"],
+        optionFeedback: {
+          A: "Kata kerja 'cooking' tidak bisa berdiri sendiri tanpa 'to be' atau kata kerja seperti 'like/enjoy'.",
+          C: "Kata keterangan frekuensi 'usually' diletakkan sebelum kata kerja utama ('cook'), bukan setelahnya.",
+          D: "Posisi 'usually' dan bentuk 'cook' setelah 'like' tidak tepat."
+        },
+        guidance: "Dalam Simple Present, adverb of frequency ('usually') diletakkan langsung sebelum kata kerja utama (base verb untuk subjek 'I').",
+        successNote: "Benar! 'I usually cook on weekends.' lebih ringkas dan sangat natural digunakan dalam percakapan."
+      },
+      {
+        id: 47,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "complex",
+        question: "Pilih SEMUA kalimat yang menggunakan pola 'Like / Love / Enjoy / Hate + Verb-ing' secara BENAR:",
+        options: {
+          A: "She hates cleaning the kitchen.",
+          B: "We like traveling on holidays.",
+          C: "My friend loves take photos.",
+          D: "They enjoy playing basketball."
+        },
+        correct: ["A", "B", "D"],
+        optionFeedback: {
+          C: "Setelah 'loves', kata kerja 'take' harus diubah menjadi Verb-ing ('taking')."
+        },
+        guidance: "Cek apakah semua kata kerja aktivitas setelah like/love/enjoy/hate sudah menggunakan akhiran -ing dan sesuai dengan subjeknya.",
+        successNote: "Hebat! 'Hates cleaning', 'like traveling', dan 'enjoy playing' semuanya tepat."
+      },
+      {
+        id: 48,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "complex",
+        question: "Menurut Chapter 5, hobi 'Cooking' dan 'Sports' dapat melatih keterampilan berharga untuk masa depan kerja. Pilih pernyataan yang BENAR:",
+        options: {
+          A: "Cooking can develop creativity, patience, accuracy, responsibility, and teamwork.",
+          B: "Sports can develop discipline, teamwork, and determination.",
+          C: "Reading can develop vocabulary, knowledge, and concentration.",
+          D: "Watching movies can develop messy workplace habits."
+        },
+        correct: ["A", "B", "C"],
+        optionFeedback: {
+          D: "Pernyataan ini salah dan bukan merupakan keterampilan kerja positif yang diajarkan di Chapter 5."
+        },
+        guidance: "Ingat kembali daftar manfaat positif hobi (Cooking, Sports, Reading, Photography) pada bagian akhir Chapter 5.",
+        successNote: "Sempurna! Hobi yang kita sukai hari ini bisa menjadi soft skill penting di dunia kerja esok hari."
+      },
+      {
+        id: 49,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "complex",
+        question: "Pilih SEMUA ungkapan yang termasuk 'Talking about dislikes' (menyatakan ketidaksukaan) dalam Chapter 5:",
+        options: {
+          A: "I don't really like playing games for a long time.",
+          B: "I'm not a big fan of noisy places.",
+          C: "I hate waiting.",
+          D: "I'm a big fan of baking."
+        },
+        correct: ["A", "B", "C"],
+        optionFeedback: {
+          D: "'I'm a big fan of...' artinya saya sangat menyukai/penggemar berat, bukan ketidaksukaan."
+        },
+        guidance: "Pilih semua kalimat yang bermakna negatif (tidak terlalu suka, bukan penggemar, atau benci melakukan sesuatu).",
+        successNote: "Tepat! Ketiga ekspresi tersebut dapat digunakan untuk menyatakan ketidaksukaan dari level halus hingga kuat."
+      },
+      {
+        id: 50,
+        chapter: 5,
+        chapterTitle: "My Hobbies & Free Time",
+        type: "complex",
+        question: "Pilih pasangan kosakata Hobbies & Free-Time Activities (Word Bank Chapter 5) dan artinya yang BENAR:",
+        options: {
+          A: "cycling = bersepeda",
+          B: "gardening = memancing",
+          C: "baking = membuat kue",
+          D: "making new recipes = mencoba makanan baru"
+        },
+        correct: ["A", "C"],
+        optionFeedback: {
+          B: "'Gardening' berarti berkebun; bahasa Inggris untuk memancing adalah 'fishing'.",
+          D: "'Making new recipes' berarti membuat resep baru; mencoba makanan baru adalah 'trying new food'."
+        },
+        guidance: "Periksa kembali arti kosakata hobi di Word Bank Chapter 5 secara teliti, terutama 'gardening' vs 'fishing' dan 'making new recipes' vs 'trying new food'.",
+        successNote: "Luar biasa! 'Cycling' = bersepeda dan 'baking' = membuat kue."
+      }
+    ];
+
+    // =========================================================================
+    // STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+    // =========================================================================
+    const STORAGE_KEY = "esc_book1_ch1_5_quiz_state_v1";
+
+    const defaultState = {
+      solvedIds: [],           // Array of question IDs answered completely right
+      attemptedWrongIds: [],   // Array of question IDs where user has made >= 1 mistake
+      wrongChoices: {},        // { [qId]: ['A', 'C'] } -> tracks wrong options clicked in single choice
+      complexSelections: {},   // { [qId]: ['A', 'B'] } -> tracks checked options in complex choice
+      complexLastCheck: {},    // { [qId]: { checked: true, wrongSelected: [], missingCount: 0 } }
+      totalMistakes: 0,
+      currentQuestionId: 1,
+      chapterFilter: "all",
+      typeFilter: "all"
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return { ...structuredClone(defaultState), ...parsed };
+      } catch (err) {
+        console.error("Failed to load quiz state:", err);
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (err) {
+        console.error("Failed to save quiz state:", err);
+      }
+    }
+
+    // =========================================================================
+    // DOM REFERENCES
+    // =========================================================================
+    const statSolvedEl = document.getElementById("statSolved");
+    const statMistakesEl = document.getElementById("statMistakes");
+    const progressBarEl = document.getElementById("progressBar");
+    const progressPercentEl = document.getElementById("progressPercent");
+    const completionBannerEl = document.getElementById("completionBanner");
+
+    const qNumberBadgeEl = document.getElementById("qNumberBadge");
+    const qChapterBadgeEl = document.getElementById("qChapterBadge");
+    const qTypeBadgeEl = document.getElementById("qTypeBadge");
+    const qTextEl = document.getElementById("qText");
+    const qInstructionEl = document.getElementById("qInstruction");
+    const optionsContainerEl = document.getElementById("optionsContainer");
+
+    const complexActionWrapEl = document.getElementById("complexActionWrap");
+    const complexSelectedHintEl = document.getElementById("complexSelectedHint");
+    const checkComplexBtnEl = document.getElementById("checkComplexBtn");
+    const feedbackBoxEl = document.getElementById("feedbackBox");
+
+    const prevBtnEl = document.getElementById("prevBtn");
+    const nextBtnEl = document.getElementById("nextBtn");
+    const filterPositionTextEl = document.getElementById("filterPositionText");
+
+    const desktopNavGridEl = document.getElementById("desktopNavGrid");
+    const mobileNavGridEl = document.getElementById("mobileNavGrid");
+    const navCountBadgeEl = document.getElementById("navCountBadge");
+
+    const mobileNavBtn = document.getElementById("mobileNavBtn");
+    const mobileDrawerOverlay = document.getElementById("mobileDrawerOverlay");
+    const mobileDrawerBackdrop = document.getElementById("mobileDrawerBackdrop");
+    const closeMobileDrawerBtn = document.getElementById("closeMobileDrawerBtn");
+
+    const openResetModalBtn = document.getElementById("openResetModalBtn");
+    const resetModal = document.getElementById("resetModal");
+    const resetModalBackdrop = document.getElementById("resetModalBackdrop");
+    const cancelResetBtn = document.getElementById("cancelResetBtn");
+    const confirmResetBtn = document.getElementById("confirmResetBtn");
+
+    // =========================================================================
+    // FILTER HELPERS
+    // =========================================================================
+    function getFilteredQuestions() {
+      return QUESTIONS.filter((q) => {
+        const matchChapter = state.chapterFilter === "all" || String(q.chapter) === String(state.chapterFilter);
+        const matchType = state.typeFilter === "all" || q.type === state.typeFilter;
+        return matchChapter && matchType;
+      });
+    }
+
+    function ensureValidCurrentQuestion(filtered) {
+      if (filtered.length === 0) return null;
+      const exists = filtered.some((q) => q.id === state.currentQuestionId);
+      if (!exists) {
+        state.currentQuestionId = filtered[0].id;
+        saveState();
+      }
+      return filtered.find((q) => q.id === state.currentQuestionId);
+    }
+
+    // =========================================================================
+    // CORE RENDERING
+    // =========================================================================
+    function renderAll() {
+      renderStats();
+      renderFilterButtons();
+      const filtered = getFilteredQuestions();
+      const currentQ = ensureValidCurrentQuestion(filtered);
+      renderNavGrids(filtered);
+      if (currentQ) {
+        renderQuestion(currentQ, filtered);
+      }
+    }
+
+    function renderStats() {
+      const total = QUESTIONS.length;
+      const solved = state.solvedIds.length;
+      const pct = Math.round((solved / total) * 100);
+
+      statSolvedEl.textContent = `${solved} / ${total}`;
+      statMistakesEl.textContent = String(state.totalMistakes);
+      progressBarEl.style.width = `${pct}%`;
+      progressPercentEl.textContent = `${pct}%`;
+
+      if (solved === total) {
+        completionBannerEl.classList.remove("hidden");
+      } else {
+        completionBannerEl.classList.add("hidden");
+      }
+    }
+
+    function renderFilterButtons() {
+      document.querySelectorAll(".chapter-filter-btn").forEach((btn) => {
+        const active = btn.dataset.chapter === String(state.chapterFilter);
+        btn.className = `chapter-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0 ${
+          active
+            ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/25"
+            : "bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 hover:bg-slate-800"
+        }`;
+      });
+
+      document.querySelectorAll(".type-filter-btn").forEach((btn) => {
+        const active = btn.dataset.type === state.typeFilter;
+        btn.className = `type-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+          active
+            ? "bg-violet-600 text-white shadow-md shadow-violet-600/25"
+            : "bg-slate-900 text-slate-400 border border-slate-800 hover:text-slate-200 hover:bg-slate-800"
+        }`;
+      });
+    }
+
+    function renderNavGrids(filtered) {
+      navCountBadgeEl.textContent = `${filtered.length} ditampilkan`;
+
+      const buildGridHTML = () =>
+        filtered
+          .map((q) => {
+            const isSolved = state.solvedIds.includes(q.id);
+            const hasWrong = state.attemptedWrongIds.includes(q.id);
+            const isActive = q.id === state.currentQuestionId;
+
+            let colorClasses = "bg-slate-800/80 text-slate-300 border-slate-700/80 hover:bg-slate-700";
+            if (isSolved) {
+              colorClasses = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30";
+            } else if (hasWrong) {
+              colorClasses = "bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30";
+            }
+
+            const activeRing = isActive ? "ring-2 ring-indigo-400 ring-offset-2 ring-offset-slate-900 font-bold" : "";
+            const complexDot =
+              q.type === "complex"
+                ? `<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-violet-400" title="PG Kompleks"></span>`
+                : "";
+
+            return `
+              <button type="button" data-jump-id="${q.id}" class="relative h-10 rounded-xl border text-xs font-semibold transition flex items-center justify-center ${colorClasses} ${activeRing}">
+                ${q.id}
+                ${complexDot}
+              </button>
+            `;
+          })
+          .join("");
+
+      const html = buildGridHTML();
+      desktopNavGridEl.innerHTML = html;
+      mobileNavGridEl.innerHTML = html;
+
+      // Attach click events to jump buttons
+      [desktopNavGridEl, mobileNavGridEl].forEach((container) => {
+        container.querySelectorAll("[data-jump-id]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.currentQuestionId = Number(btn.dataset.jumpId);
+            saveState();
+            closeMobileDrawer();
+            renderAll();
+          });
+        });
+      });
+    }
+
+    function renderQuestion(q, filtered) {
+      const idx = filtered.findIndex((item) => item.id === q.id);
+      const isSolved = state.solvedIds.includes(q.id);
+
+      qNumberBadgeEl.textContent = `Soal #${q.id}`;
+      qChapterBadgeEl.textContent = `Chapter ${q.chapter}: ${q.chapterTitle}`;
+
+      if (q.type === "single") {
+        qTypeBadgeEl.textContent = "Pilihan Ganda";
+        qTypeBadgeEl.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-500/15 border border-sky-500/30 text-sky-300";
+        qInstructionEl.textContent = isSolved
+          ? "Soal ini sudah terjawab dengan benar."
+          : "Pilih satu jawaban yang paling tepat. Auto-koreksi langsung berjalan saat kamu memilih opsi.";
+        complexActionWrapEl.classList.add("hidden");
+      } else {
+        qTypeBadgeEl.textContent = "Pilihan Ganda Kompleks (Pilih lebih dari 1)";
+        qTypeBadgeEl.className = "px-2.5 py-1 rounded-lg text-xs font-semibold bg-violet-500/15 border border-violet-500/30 text-violet-300";
+        qInstructionEl.textContent = isSolved
+          ? "Semua jawaban benar untuk soal kompleks ini sudah tepat."
+          : "Centang beberapa opsi yang benar, lalu klik 'Periksa Jawaban'.";
+        complexActionWrapEl.classList.toggle("hidden", isSolved);
+      }
+
+      qTextEl.textContent = q.question;
+      filterPositionTextEl.textContent = `${idx + 1} dari ${filtered.length}`;
+      prevBtnEl.disabled = idx <= 0;
+      nextBtnEl.disabled = idx >= filtered.length - 1;
+
+      renderOptions(q, isSolved);
+      renderFeedback(q, isSolved);
+    }
+
+    function renderOptions(q, isSolved) {
+      const keys = ["A", "B", "C", "D"];
+      const wrongList = state.wrongChoices[q.id] || [];
+      const selectedComplex = state.complexSelections[q.id] || [];
+      const lastComplexCheck = state.complexLastCheck[q.id] || null;
+
+      if (q.type === "complex") {
+        const count = selectedComplex.length;
+        complexSelectedHintEl.textContent =
+          count === 0
+            ? "Belum ada opsi yang dicentang."
+            : `${count} opsi dipilih. Klik 'Periksa Jawaban' untuk koreksi.`;
+        checkComplexBtnEl.disabled = count === 0;
+      }
+
+      optionsContainerEl.innerHTML = keys
+        .map((key) => {
+          const text = q.options[key];
+          let cardClasses =
+            "border-slate-800 bg-slate-950/50 hover:bg-slate-800/70 hover:border-slate-700 text-slate-200";
+          let badgeClasses = "bg-slate-800 text-slate-300 border-slate-700";
+          let indicatorHTML = "";
+
+          if (q.type === "single") {
+            const isCorrectChoice = q.correct.includes(key);
+            const isWrongTried = wrongList.includes(key);
+
+            if (isSolved && isCorrectChoice) {
+              cardClasses = "border-emerald-500/60 bg-emerald-500/15 text-emerald-100";
+              badgeClasses = "bg-emerald-500 text-slate-950 border-emerald-400";
+              indicatorHTML = `<span class="text-xs font-bold text-emerald-400 shrink-0">✓ Benar</span>`;
+            } else if (isWrongTried) {
+              cardClasses = "border-rose-500/60 bg-rose-500/10 text-rose-200";
+              badgeClasses = "bg-rose-500 text-white border-rose-400";
+              indicatorHTML = `<span class="text-xs font-bold text-rose-400 shrink-0">✕ Salah</span>`;
+            }
+          } else {
+            // Complex (Multiple Choice)
+            const isChecked = selectedComplex.includes(key);
+            const isMarkedWrong =
+              !isSolved &&
+              lastComplexCheck &&
+              lastComplexCheck.wrongSelected &&
+              lastComplexCheck.wrongSelected.includes(key) &&
+              isChecked;
+
+            if (isSolved && q.correct.includes(key)) {
+              cardClasses = "border-emerald-500/60 bg-emerald-500/15 text-emerald-100";
+              badgeClasses = "bg-emerald-500 text-slate-950 border-emerald-400";
+              indicatorHTML = `<span class="text-xs font-bold text-emerald-400 shrink-0">✓ Benar</span>`;
+            } else if (isMarkedWrong) {
+              cardClasses = "border-rose-500/60 bg-rose-500/10 text-rose-200";
+              badgeClasses = "bg-rose-500 text-white border-rose-400";
+              indicatorHTML = `<span class="text-xs font-bold text-rose-400 shrink-0">✕ Keliru</span>`;
+            } else if (isChecked) {
+              cardClasses = "border-indigo-500/70 bg-indigo-500/15 text-white";
+              badgeClasses = "bg-indigo-500 text-white border-indigo-400";
+              indicatorHTML = `<span class="text-xs font-semibold text-indigo-300 shrink-0">Dipilih</span>`;
+            }
+          }
+
+          const checkboxVisual =
+            q.type === "complex"
+              ? `<span class="w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition ${
+                  (isSolved && q.correct.includes(key))
+                    ? "bg-emerald-500 border-emerald-400 text-slate-950"
+                    : selectedComplex.includes(key)
+                    ? "bg-indigo-500 border-indigo-400 text-white"
+                    : "border-slate-600 bg-slate-900"
+                }">
+                  ${
+                    (isSolved && q.correct.includes(key)) || selectedComplex.includes(key)
+                      ? `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`
+                      : ""
+                  }
+                </span>`
+              : "";
+
+          const disabledAttr = isSolved ? "disabled" : "";
+
+          return `
+            <button type="button" data-opt-key="${key}" ${disabledAttr}
+              class="w-full text-left p-3.5 sm:p-4 rounded-xl border transition flex items-center gap-3.5 ${cardClasses} ${
+                isSolved ? "cursor-default" : "cursor-pointer active:scale-[0.995]"
+              }">
+              ${checkboxVisual}
+              <span class="w-8 h-8 rounded-lg border text-xs font-bold flex items-center justify-center shrink-0 ${badgeClasses}">
+                ${key}
+              </span>
+              <span class="text-sm sm:text-[15px] leading-snug flex-1">${text}</span>
+              ${indicatorHTML}
+            </button>
+          `;
+        })
+        .join("");
+
+      if (!isSolved) {
+        optionsContainerEl.querySelectorAll("[data-opt-key]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const key = btn.dataset.optKey;
+            if (q.type === "single") {
+              handleSingleChoiceClick(q, key);
+            } else {
+              handleComplexToggle(q, key);
+            }
+          });
+        });
+      }
+    }
+
+    // =========================================================================
+    // SMART AUTO-CORRECTION LOGIC (WITHOUT LEAKING CORRECT ANSWERS!)
+    // =========================================================================
+    function handleSingleChoiceClick(q, selectedKey) {
+      if (state.solvedIds.includes(q.id)) return;
+
+      const isCorrect = q.correct.includes(selectedKey);
+      if (isCorrect) {
+        state.solvedIds.push(q.id);
+        saveState();
+        renderAll();
+      } else {
+        // Record wrong attempt
+        if (!state.wrongChoices[q.id]) state.wrongChoices[q.id] = [];
+        if (!state.wrongChoices[q.id].includes(selectedKey)) {
+          state.wrongChoices[q.id].push(selectedKey);
+        }
+        // Move selectedKey to the end so feedback always highlights the latest clicked wrong option
+        state.wrongChoices[q.id] = [
+          ...state.wrongChoices[q.id].filter((k) => k !== selectedKey),
+          selectedKey
+        ];
+        if (!state.attemptedWrongIds.includes(q.id)) {
+          state.attemptedWrongIds.push(q.id);
+        }
+        state.totalMistakes += 1;
+        saveState();
+        renderAll();
+      }
+    }
+
+    function handleComplexToggle(q, key) {
+      if (state.solvedIds.includes(q.id)) return;
+      const current = state.complexSelections[q.id] || [];
+      if (current.includes(key)) {
+        state.complexSelections[q.id] = current.filter((k) => k !== key);
+      } else {
+        state.complexSelections[q.id] = [...current, key];
+      }
+      // Clear stale red badge on unchecked item while keeping guidance until next check
+      saveState();
+      renderOptions(q, false);
+    }
+
+    function handleComplexCheck() {
+      const filtered = getFilteredQuestions();
+      const q = filtered.find((item) => item.id === state.currentQuestionId);
+      if (!q || q.type !== "complex" || state.solvedIds.includes(q.id)) return;
+
+      const selected = state.complexSelections[q.id] || [];
+      if (selected.length === 0) return;
+
+      const wrongSelected = selected.filter((k) => !q.correct.includes(k));
+      const missingCorrect = q.correct.filter((k) => !selected.includes(k));
+
+      if (wrongSelected.length === 0 && missingCorrect.length === 0) {
+        // 100% correct and complete!
+        state.solvedIds.push(q.id);
+        delete state.complexLastCheck[q.id];
+        saveState();
+        renderAll();
+      } else {
+        // Incomplete or has wrong options — DO NOT reveal which unchecked options are correct!
+        if (!state.attemptedWrongIds.includes(q.id)) {
+          state.attemptedWrongIds.push(q.id);
+        }
+        state.totalMistakes += 1;
+        state.complexLastCheck[q.id] = {
+          checked: true,
+          wrongSelected,
+          hasMissing: missingCorrect.length > 0
+        };
+        saveState();
+        renderAll();
+      }
+    }
+
+    function renderFeedback(q, isSolved) {
+      // 1. Solved state -> Green success box
+      if (isSolved) {
+        feedbackBoxEl.className = "mt-6 rounded-2xl p-4 sm:p-5 border border-emerald-500/40 bg-emerald-950/40";
+        feedbackBoxEl.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-emerald-300">Jawaban Benar!</h4>
+              <p class="text-sm text-emerald-100/90 mt-1 leading-relaxed">${q.successNote}</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 2. Single Choice Wrong Feedback (Never leaks the answer!)
+      if (q.type === "single") {
+        const wrongList = state.wrongChoices[q.id] || [];
+        if (wrongList.length === 0) {
+          feedbackBoxEl.className = "hidden";
+          feedbackBoxEl.innerHTML = "";
+          return;
+        }
+
+        const latestWrongKey = wrongList[wrongList.length - 1];
+        const specificReason = q.optionFeedback[latestWrongKey] || "Opsi ini belum sesuai dengan aturan atau konteks materi.";
+
+        feedbackBoxEl.className = "mt-6 rounded-2xl p-4 sm:p-5 border border-rose-500/40 bg-rose-950/30";
+        feedbackBoxEl.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0 mt-0.5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            </div>
+            <div class="space-y-3 flex-1">
+              <div>
+                <h4 class="text-sm font-bold text-rose-300">Belum Tepat — Coba Opsi Lain!</h4>
+                <p class="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
+                  <strong class="text-rose-300">Salahnya di mana (Opsi ${latestWrongKey}):</strong> ${specificReason}
+                </p>
+              </div>
+              <div class="rounded-xl bg-slate-900/80 border border-indigo-500/30 p-3.5">
+                <p class="text-xs sm:text-sm text-indigo-200 leading-relaxed">
+                  <strong class="text-indigo-300">💡 Gimana harusnya:</strong> ${q.guidance}
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 3. Complex Choice Wrong / Incomplete Feedback (Never leaks the answer!)
+      const lastCheck = state.complexLastCheck[q.id];
+      if (!lastCheck || !lastCheck.checked) {
+        feedbackBoxEl.className = "hidden";
+        feedbackBoxEl.innerHTML = "";
+        return;
+      }
+
+      const { wrongSelected, hasMissing } = lastCheck;
+      let diagnosticHTML = "";
+
+      if (wrongSelected.length > 0) {
+        const items = wrongSelected
+          .map((key) => {
+            const reason = q.optionFeedback[key] || "Opsi ini kurang tepat untuk pertanyaan ini.";
+            return `<li class="text-xs sm:text-sm text-slate-200 leading-relaxed"><strong class="text-rose-300">Opsi ${key}:</strong> ${reason}</li>`;
+          })
+          .join("");
+
+        diagnosticHTML += `
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-rose-300 mb-1.5">Salahnya di mana:</p>
+            <ul class="list-disc pl-5 space-y-1.5">${items}</ul>
+          </div>
+        `;
+
+        if (hasMissing) {
+          diagnosticHTML += `
+            <p class="text-xs sm:text-sm text-amber-300/95">
+              Selain memperbaiki opsi yang keliru di atas, periksa kembali opsi lainnya karena masih ada jawaban benar yang belum kamu centang.
+            </p>
+          `;
+        }
+      } else if (hasMissing) {
+        diagnosticHTML += `
+          <p class="text-xs sm:text-sm text-amber-200 leading-relaxed">
+            <strong class="text-amber-300">Hampir tepat!</strong> Opsi yang kamu pilih sudah tepat, namun masih ada jawaban benar lainnya yang belum kamu centang.
+          </p>
+        `;
+      }
+
+      const borderBg =
+        wrongSelected.length > 0
+          ? "border-rose-500/40 bg-rose-950/30"
+          : "border-amber-500/40 bg-amber-950/25";
+      const titleColor = wrongSelected.length > 0 ? "text-rose-300" : "text-amber-300";
+      const titleText =
+        wrongSelected.length > 0
+          ? "Kombinasi Jawaban Belum Tepat — Coba Perbaiki!"
+          : "Jawaban Belum Lengkap — Tambah Pilihan Benar Lainnya!";
+
+      feedbackBoxEl.className = `mt-6 rounded-2xl p-4 sm:p-5 border ${borderBg}`;
+      feedbackBoxEl.innerHTML = `
+        <div class="space-y-3">
+          <h4 class="text-sm font-bold ${titleColor}">${titleText}</h4>
+          ${diagnosticHTML}
+          <div class="rounded-xl bg-slate-900/80 border border-indigo-500/30 p-3.5">
+            <p class="text-xs sm:text-sm text-indigo-200 leading-relaxed">
+              <strong class="text-indigo-300">💡 Gimana harusnya:</strong> ${q.guidance}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS (FILTERS, NAVIGATION, DRAWER, RESET MODAL)
+    // =========================================================================
+    document.querySelectorAll(".chapter-filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.chapterFilter = btn.dataset.chapter;
+        saveState();
+        renderAll();
+      });
+    });
+
+    document.querySelectorAll(".type-filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.typeFilter = btn.dataset.type;
+        saveState();
+        renderAll();
+      });
+    });
+
+    checkComplexBtnEl.addEventListener("click", handleComplexCheck);
+
+    prevBtnEl.addEventListener("click", () => {
+      const filtered = getFilteredQuestions();
+      const idx = filtered.findIndex((q) => q.id === state.currentQuestionId);
+      if (idx > 0) {
+        state.currentQuestionId = filtered[idx - 1].id;
+        saveState();
+        renderAll();
+      }
+    });
+
+    nextBtnEl.addEventListener("click", () => {
+      const filtered = getFilteredQuestions();
+      const idx = filtered.findIndex((q) => q.id === state.currentQuestionId);
+      if (idx >= 0 && idx < filtered.length - 1) {
+        state.currentQuestionId = filtered[idx + 1].id;
+        saveState();
+        renderAll();
+      }
+    });
+
+    // Mobile Drawer
+    function openMobileDrawer() {
+      mobileDrawerOverlay.classList.remove("hidden");
+    }
+    function closeMobileDrawer() {
+      mobileDrawerOverlay.classList.add("hidden");
+    }
+    mobileNavBtn.addEventListener("click", openMobileDrawer);
+    mobileDrawerBackdrop.addEventListener("click", closeMobileDrawer);
+    closeMobileDrawerBtn.addEventListener("click", closeMobileDrawer);
+
+    // Custom Reset Modal (No alert/confirm)
+    function openResetModal() {
+      resetModal.classList.remove("hidden");
+      resetModal.classList.add("flex");
+    }
+    function closeResetModal() {
+      resetModal.classList.add("hidden");
+      resetModal.classList.remove("flex");
+    }
+    openResetModalBtn.addEventListener("click", openResetModal);
+    resetModalBackdrop.addEventListener("click", closeResetModal);
+    cancelResetBtn.addEventListener("click", closeResetModal);
+    confirmResetBtn.addEventListener("click", () => {
+      state = structuredClone(defaultState);
+      saveState();
+      closeResetModal();
+      renderAll();
+    });
+
+    // Initial Render
+    renderAll();
+  </script>
+</body>
+</html>
